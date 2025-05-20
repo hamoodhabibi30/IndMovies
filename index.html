@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freedom of Movies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffd700;
+            --secondary-color: #c41e3a;
+            --accent-color: #8b0000;
+            --bg-dark: #000000;
+            --bg-darker: #0a0505;
+            --text-color: #ffd700;
+            --card-bg: #1a1010;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--bg-darker);
+        }
+
+        *::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 2px solid var(--bg-darker);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--secondary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        header.header-hidden {
+            transform: translateY(-100%);
+        }
+
+        .site-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin: 0;
+            padding: 10px 0;
+            text-align: center;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+            animation: fireEffect 4s infinite;
+            background: linear-gradient(45deg, #ffd700, #ff4d4d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .site-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9em;
+            color: #ff3333;
+            text-align: center;
+            margin: 0 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 51, 51, 0.5);
+        }
+
+        #search {
+            padding: 8px 15px;
+            width: 60%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            margin: 10px auto;
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        #search::placeholder {
+            color: rgba(255, 215, 0, 0.6);
+            font-style: italic;
+        }
+
+        #search:focus {
+            width: 75%;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            background: rgba(0, 0, 0, 0.9);
+            border-color: #ff4d4d;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 0 15px;
+        }
+
+        nav button {
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 8px 20px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 100px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        nav button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: translate(-150%, -50%) scale(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        nav button:hover {
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        nav button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        nav button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Add active state for selected category */
+        nav button.active {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+            font-weight: bold;
+        }
+
+        nav button.active::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        @media (max-width: 768px) {
+            nav button {
+                padding: 6px 15px;
+                font-size: 0.8em;
+                min-width: 90px;
+            }
+            
+            nav button:hover {
+                letter-spacing: 1.5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav button {
+                padding: 5px 12px;
+                font-size: 0.75em;
+                min-width: 80px;
+            }
+            
+            nav button:hover {
+                letter-spacing: 1.2px;
+            }
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            min-height: calc(100vh - 200px);
+            margin-top: 180px; /* Add space for fixed header */
+        }
+
+        #home {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .movie-card {
+            display: inline-block;
+            width: 180px;
+            margin: 10px;
+            background: linear-gradient(145deg, #1a1010, #2a1515);
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            vertical-align: top;
+            backdrop-filter: blur(5px);
+            transform-origin: center bottom;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-card img.movie-poster {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            background: rgba(0, 255, 0, 0.05);
+            will-change: transform;
+            display: block;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .movie-card img.movie-poster:not(.loaded) {
+            min-height: 350px;
+            background: linear-gradient(45deg, rgba(0, 255, 0, 0.05) 25%, transparent 25%, transparent 50%, rgba(0, 255, 0, 0.05) 50%, rgba(0, 255, 0, 0.05) 75%, transparent 75%, transparent);
+            background-size: 20px 20px;
+            animation: loading-animation 1s linear infinite;
+        }
+
+        @keyframes loading-animation {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
+        }
+
+        .movie-card img.loaded {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .movie-card:hover img.movie-poster {
+            transform: perspective(1000px) rotateY(5deg) translateY(-10px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Error state for images */
+        .movie-card img.movie-poster[src*="placeholder.com"] {
+            object-fit: contain;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px dashed var(--primary-color);
+        }
+
+        .movie-card h3 {
+            color: var(--primary-color);
+            margin: 8px 0;
+            font-size: 0.9em;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+        }
+
+        #details {
+            background: var(--card-bg);
+            padding: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            animation: scanline 2s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        #details img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+            animation: imageGlow 2s ease-in-out infinite alternate;
+            transition: transform 0.3s ease;
+        }
+
+        #details img:hover {
+            transform: scale(1.02);
+        }
+
+        @keyframes imageGlow {
+            from { box-shadow: 0 0 20px rgba(0, 255, 0, 0.1); }
+            to { box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); }
+        }
+
+        #details h2 {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            animation: titlePulse 2s infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            from { text-shadow: 0 0 10px var(--primary-color); }
+            to { text-shadow: 0 0 20px var(--primary-color), 0 0 30px var(--primary-color); }
+        }
+
+        #details p {
+            line-height: 1.6;
+            margin: 15px 0;
+            font-size: 1.1em;
+            animation: fadeIn 0.5s ease-out;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 5px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        #details ul {
+            list-style: none;
+            padding: 0;
+            animation: fadeIn 0.5s ease-out 0.2s backwards;
+        }
+
+        #details li {
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #details li:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+        }
+
+        #details li a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        #details li a:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        /* Back Button Styles */
+        .back-btn {
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px auto;
+            display: block;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .back-btn::before {
+            content: '←';
+            position: absolute;
+            left: 15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover::before {
+            opacity: 1;
+            transform: translateX(-5px);
+        }
+
+        .back-btn:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--primary-color);
+            padding-left: 40px;
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Error Message Back Button */
+        .error-message .back-btn {
+            margin: 20px auto 0;
+            background: rgba(0, 255, 0, 0.1);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .error-message .back-btn:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+        }
+
+        @media (max-width: 768px) {
+            .back-btn {
+                width: 90%;
+                max-width: 300px;
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-btn {
+                width: 100%;
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-logo {
+                font-size: 1.5em;
+                padding: 5px 0;
+            }
+            
+            .site-subtitle {
+                font-size: 0.8em;
+                margin: 0 0 5px;
+            }
+            
+            #search {
+                width: 80%;
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+            
+            nav button {
+                padding: 4px 10px;
+                font-size: 0.7em;
+                min-width: 80px;
+            }
+            
+            main {
+                margin-top: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-logo {
+                font-size: 1.2em;
+            }
+            
+            .site-subtitle {
+                font-size: 0.7em;
+            }
+            
+            nav button {
+                padding: 3px 8px;
+                font-size: 0.65em;
+                min-width: 70px;
+            }
+            
+            main {
+                margin-top: 140px;
+            }
+        }
+
+        /* Footer Styles */
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 40px 20px;
+            margin-top: auto;
+            border-top: 2px solid var(--secondary-color);
+            box-shadow: 0 -5px 15px rgba(255, 0, 0, 0.2);
+            position: relative;
+            z-index: 100;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        .footer-section {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .footer-section:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .footer-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-shadow: 0 0 10px var(--primary-color);
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+            animation: neonPulse 1.5s infinite;
+        }
+
+        @keyframes neonPulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: 8px;
+        }
+
+        .footer-section li {
+            margin: 0;
+        }
+
+        .footer-section a:not(.telegram-link) {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 15px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px var(--primary-color);
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 5px;
+            border: 1px solid transparent;
+        }
+
+        .footer-section a:not(.telegram-link):hover {
+            color: var(--primary-color);
+            transform: translateX(10px);
+            text-shadow: 0 0 10px var(--primary-color);
+            background: rgba(0, 255, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .footer-section a:not(.telegram-link)::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .footer-section .category-link:hover::before {
+            width: 100%;
+        }
+
+        .footer-section .category-link::after {
+            content: '→';
+            position: absolute;
+            right: 10px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+        }
+
+        .footer-section .category-link:hover::after {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .social-links .telegram-link {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            box-shadow: 0 0 20px var(--primary-color);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            text-shadow: none;
+            width: auto;
+            animation: buttonGlow 1.5s infinite;
+        }
+
+        @keyframes buttonGlow {
+            0% { box-shadow: 0 0 20px var(--primary-color); }
+            50% { box-shadow: 0 0 40px var(--primary-color); }
+            100% { box-shadow: 0 0 20px var(--primary-color); }
+        }
+
+        .social-links .telegram-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--primary-color);
+            background: #00cc00;
+            color: var(--bg-dark);
+        }
+
+        .social-links .telegram-link i {
+            font-size: 1.4em;
+        }
+
+        .social-links .telegram-link span {
+            margin-left: 5px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--primary-color);
+            color: var(--text-color);
+            font-size: 0.9em;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+            animation: glow 2s infinite alternate;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .footer-section {
+                padding: 15px;
+            }
+
+            .social-links {
+                flex-wrap: wrap;
+            }
+
+            .social-links a {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .social-links .telegram-link {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Enhanced Button Styles */
+        button {
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Performance Optimizations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Scroll to Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid var(--accent-color);
+            font-size: 1.5em;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--accent-color);
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .scroll-top {
+                bottom: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            animation: loading 1.5s linear infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Enhanced Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            flex-wrap: wrap;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+
+        .pagination button {
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 40px;
+            font-size: 0.9em;
+        }
+
+        .pagination button:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .pagination button.current-page {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            font-weight: bold;
+        }
+
+        .pagination button:first-child,
+        .pagination button:last-child {
+            min-width: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .pagination {
+                gap: 5px;
+                padding: 10px;
+            }
+            
+            .pagination button {
+                padding: 8px 15px;
+                font-size: 0.8em;
+                min-width: 35px;
+            }
+            
+            .pagination button:first-child,
+            .pagination button:last-child {
+                min-width: 80px;
+            }
+            
+            .movie-card {
+                width: calc(50% - 20px);
+                margin: 10px;
+                padding: 10px;
+            }
+            
+        .movie-card img {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pagination button {
+                padding: 6px 12px;
+                font-size: 0.75em;
+                min-width: 30px;
+            }
+            
+            .pagination button:first-child,
+            .pagination button:last-child {
+                min-width: 70px;
+            }
+            
+            .movie-card {
+                width: calc(50% - 10px);
+                margin: 5px;
+                padding: 8px;
+            }
+            
+            .movie-card img {
+                height: 200px;
+            }
+        }
+
+        /* Loading Placeholder */
+        .movie-card img[src*="placeholder.com"] {
+            object-fit: contain;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        /* Error Message */
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 8px;
+            color: #ff3333;
+            margin: 20px 0;
+        }
+
+        .error-message button {
+            margin-top: 15px;
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .error-message button:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 8px;
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .pagination {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .pagination button {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        .movie-card {
+            will-change: transform;
+            contain: content;
+        }
+        
+        .movie-card img {
+            will-change: opacity;
+            contain: strict;
+            width: 100%;
+            height: auto;
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .details-poster {
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .details-poster:hover {
+            transform: scale(1.02);
+        }
+
+        #details {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #details h2 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #details p {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        #details ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        #details li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        #details li:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #details li span {
+            color: #e0e0e0;
+        }
+
+        #details li a {
+            color: #4CAF50;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: rgba(76, 175, 80, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #details li a:hover {
+            background: rgba(76, 175, 80, 0.2);
+            transform: translateX(5px);
+        }
+
+        #details .loading {
+            text-align: center;
+            color: #e0e0e0;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        #details .error-message {
+            text-align: center;
+            color: #ff6b6b;
+            padding: 40px;
+        }
+
+        #details .no-links {
+            text-align: center;
+            color: #ff9800;
+            padding: 20px;
+            background: rgba(255, 152, 0, 0.1);
+            border-radius: 6px;
+        }
+
+        @media (max-width: 600px) {
+            #details {
+                padding: 15px;
+            }
+
+            #details h2 {
+                font-size: 20px;
+            }
+
+            .details-poster {
+                max-width: 100%;
+                height: auto;
+            }
+
+            #details li {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            #details li a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Logo Animation */
+        @keyframes fireEffect {
+            0% { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ff4d4d; }
+            25% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff4d4d, 0 0 35px #ffd700; }
+            50% { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ff4d4d; }
+            75% { text-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff4d4d, 0 0 35px #ffd700; }
+            100% { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ff4d4d; }
+        }
+
+        .site-logo::before,
+        .site-logo::after {
+            content: '⚔️';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6em;
+            opacity: 0.9;
+            text-shadow: 0 0 10px #ffd700;
+            animation: swordGlow 2s infinite alternate;
+        }
+
+        @keyframes swordGlow {
+            from { filter: drop-shadow(0 0 5px #ffd700); }
+            to { filter: drop-shadow(0 0 15px #ffd700); }
+        }
+
+        .site-logo::before {
+            left: 30px;
+            transform: translateY(-50%) rotate(-45deg);
+        }
+
+        .site-logo::after {
+            right: 30px;
+            transform: translateY(-50%) rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="site-logo">Freedom of Movies</h1>
+        <div class="site-subtitle">Where Every Movie Tells a Tale</div>
+        <input type="text" id="search" placeholder="Search your destiny..." class="glow">
+        <nav>
+            <button onclick="loadCategory('home', 1)">Home</button>
+            <button onclick="loadCategory('netflix', 1)">Netflix</button>
+            <button onclick="loadCategory('disney', 1)">Disney+</button>
+            <button onclick="loadCategory('prime', 1)">Prime</button>
+            <button onclick="loadCategory('mx', 1)">MX Original</button>
+            <button onclick="loadCategory('anime', 1)">Anime</button>
+            <button onclick="loadCategory('korean', 1)">Korean</button>
+        </nav>
+    </header>
+    <main>
+        <section id="home"></section>
+        <section id="details" style="display:none;"></section>
+    </main>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#" onclick="loadCategory('home', 1); return false;">Home</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="dmca.html">DMCA</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#" onclick="loadCategory('netflix', 1); return false;" class="category-link">Netflix Series</a></li>
+                    <li><a href="#" onclick="loadCategory('disney', 1); return false;" class="category-link">Disney+ Shows</a></li>
+                    <li><a href="#" onclick="loadCategory('prime', 1); return false;" class="category-link">Prime Video</a></li>
+                    <li><a href="#" onclick="loadCategory('mx', 1); return false;" class="category-link">MX Original</a></li>
+                    <li><a href="#" onclick="loadCategory('anime', 1); return false;" class="category-link">Anime Series</a></li>
+                    <li><a href="#" onclick="loadCategory('korean', 1); return false;" class="category-link">Korean Series</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="https://t.me/+Cel2bHX3UaI3MjE1" target="_blank" class="telegram-link">
+                        <i class="fab fa-telegram"></i>
+                        <span>Join Telegram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 IND Movies. All rights reserved.</p>
+        </div>
+    </footer>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Encrypted configuration
+        const _0x4f2a=['https://api.allorigins.win/raw?url='];
+        const _0x2e1b='https://app.vegamovies.bot/';
+        const _0x1c3d={
+            'home':`${_0x2e1b}/page/%d/`,
+            'netflix':`${_0x2e1b}/web-series/netflix/page/%d/`,
+            'disney':`${_0x2e1b}/web-series/disney-plus-hotstar/page/%d/`,
+            'prime':`${_0x2e1b}/web-series/amazon-prime-video/page/%d/`,
+            'mx':`${_0x2e1b}/web-series/mx-original/page/%d/`,
+            'anime':`${_0x2e1b}/anime-series/page/%d/`,
+            'korean':`${_0x2e1b}/korean-series/page/%d/`
+        };
+        let _0x3f4c='home';
+        let _0x5d6e=1;
+
+        // Cache DOM elements
+        const homeElement = document.getElementById('home');
+        const detailsElement = document.getElementById('details');
+        const searchInput = document.getElementById('search');
+
+        if (!homeElement || !detailsElement || !searchInput) {
+            console.error('Required DOM elements not found');
+            throw new Error('Required DOM elements not found');
+        }
+
+        // Encrypted fetch function
+        async function _0x7f8d(_0x9a0b){
+            try{
+                const _0xf5g6=_0x4f2a[0]+encodeURIComponent(_0x9a0b);
+                const _0xh7i8=await fetch(_0xf5g6,{
+                    method:'GET',
+                    mode:'cors',
+                    headers:{
+                        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                        'Accept-Language':'en-US,en;q=0.9',
+                        'Origin':window.location.origin,
+                        'Referer':window.location.origin
+                    },
+                    timeout: 5000
+                });
+                if(!_0xh7i8.ok)throw new Error(`HTTP error: ${_0xh7i8.status}`);
+                const _0xj9k0=await _0xh7i8.text();
+                if(!_0xj9k0||_0xj9k0.includes('Access Denied')||_0xj9k0.includes('403 Forbidden'))throw new Error('Access denied');
+                const _0xl1m2=new DOMParser();
+                const _0xn3o4=_0xl1m2.parseFromString(_0xj9k0,'text/html');
+                if(!_0xn3o4.querySelector('body'))throw new Error('Invalid HTML');
+                return _0xn3o4;
+            }catch(_0xp5q6){
+                console.error('Failed to fetch:', _0xp5q6);
+                throw _0xp5q6;
+            }
+        }
+
+        // Enhanced image loading function
+        function loadImage(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(new Error('Image load failed'));
+                img.src = url;
+            });
+        }
+
+        // Lazy loading implementation
+        function lazyLoadImages() {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+
+            // Also handle loading class for images that are already loaded
+            document.querySelectorAll('img.movie-poster').forEach(img => {
+                if (img.complete) {
+                    img.classList.add('loaded');
+                } else {
+                    img.addEventListener('load', () => {
+                        img.classList.add('loaded');
+                    });
+                }
+            });
+        }
+
+        // Optimized category loading
+        async function loadCategory(_0xt9u0, _0xv1w2, forceRefresh = false) {
+            try {
+                homeElement.innerHTML = '<div class="loading">Loading... Please wait...</div>';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                _0x3f4c = _0xt9u0;
+                _0x5d6e = _0xv1w2;
+                
+                const cacheParam = forceRefresh ? `&t=${Date.now()}` : '';
+                const _0xy3z4 = _0x1c3d[_0xt9u0].replace('%d', _0xv1w2) + cacheParam;
+                
+                const _0xa5b6 = await _0x7f8d(_0xy3z4);
+                
+                const _0xc7d8 = Array.from(_0xa5b6.querySelectorAll('.post-inner')).map(_0xe9f0 => {
+                    const _0xg1h2 = _0xe9f0.querySelector('h2 > a')?.textContent?.replace('Download ', '') || 'Untitled';
+                    const _0xi3j4 = _0xe9f0.querySelector('a')?.href;
+                    const _0xk5l6 = _0xe9f0.querySelector('img')?.getAttribute('data-src') || 
+                                  _0xe9f0.querySelector('img')?.getAttribute('src') || 
+                                  _0xe9f0.querySelector('img')?.getAttribute('data-lazy-src');
+                    return { 
+                        title: _0xg1h2, 
+                        href: _0xi3j4, 
+                        posterUrl: _0xk5l6 || 'https://via.placeholder.com/200x300?text=No+Image'
+                    };
+                }).filter(item => item.href && item.title);
+
+                // Check for next page by looking for pagination elements and content
+                const hasNextPage = Boolean(_0xc7d8.length > 0) && (
+                    _0xa5b6.querySelector('.nav-links .next') || 
+                    _0xa5b6.querySelector('.pagination .next') ||
+                    _0xa5b6.querySelector('a.next') ||
+                    _0xa5b6.querySelector('a[rel="next"]') ||
+                    _0xa5b6.querySelector('.page-numbers.next') ||
+                    _0xa5b6.querySelector('.pagination a:last-child') ||
+                    _0xa5b6.querySelector('a:contains("Next")') ||
+                    // Fallback: If we have content and page number is reasonable, assume there's a next page
+                    (_0xc7d8.length >= 10 && _0xv1w2 < 100)
+                );
+                
+                console.log('Current page:', _0xv1w2, 'Content count:', _0xc7d8.length, 'Has next page:', hasNextPage);
+                
+                homeElement.style.display = 'block';
+                detailsElement.style.display = 'none';
+                homeElement.innerHTML = '';
+
+                if (_0xc7d8.length === 0) {
+                    homeElement.innerHTML = '<div class="no-results">No content found for this category.</div>';
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+                _0xc7d8.forEach(_0xo9p0 => {
+                    const _0xq1r2 = document.createElement('div');
+                    _0xq1r2.className = 'movie-card';
+                    _0xq1r2.innerHTML = `
+                        <img src="${_0xo9p0.posterUrl}" 
+                             alt="${_0xo9p0.title}"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/200x300?text=No+Image'"
+                             onload="this.classList.add('loaded')"
+                             class="movie-poster">
+                        <h3>${_0xo9p0.title}</h3>
+                    `;
+                    if (_0xo9p0.href) {
+                        _0xq1r2.onclick = () => loadDetails(_0xo9p0.href);
+                    }
+                    fragment.appendChild(_0xq1r2);
+                });
+
+                homeElement.appendChild(fragment);
+
+                const _0xs3t4 = document.createElement('div');
+                _0xs3t4.className = 'pagination';
+                
+                if (_0xv1w2 > 1) {
+                    const prevButton = document.createElement('button');
+                    prevButton.textContent = '← Previous';
+                    prevButton.onclick = () => loadCategory(_0xt9u0, _0xv1w2 - 1);
+                    _0xs3t4.appendChild(prevButton);
+                }
+
+                const startPage = Math.max(1, _0xv1w2 - 2);
+                const endPage = hasNextPage ? _0xv1w2 + 2 : _0xv1w2;
+                
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.className = i === _0xv1w2 ? 'current-page' : '';
+                    pageButton.onclick = () => loadCategory(_0xt9u0, i);
+                    _0xs3t4.appendChild(pageButton);
+                }
+
+                if (hasNextPage) {
+                    const nextButton = document.createElement('button');
+                    nextButton.textContent = 'Next Page →';
+                    nextButton.className = 'pagination-next';
+                    nextButton.style.cssText = `
+                        background: rgba(0, 255, 0, 0.1);
+                        color: var(--primary-color);
+                        border: 2px solid var(--primary-color);
+                        padding: 12px 25px;
+                        border-radius: 25px;
+                        font-family: 'Orbitron', sans-serif;
+                        cursor: pointer;
+                        min-width: 150px;
+                        font-size: 1.1em;
+                        margin: 10px;
+                        transition: all 0.3s ease;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        display: inline-block;
+                        text-align: center;
+                    `;
+                    nextButton.onmouseover = () => {
+                        nextButton.style.background = 'var(--primary-color)';
+                        nextButton.style.color = 'var(--bg-dark)';
+                        nextButton.style.transform = 'translateY(-2px)';
+                        nextButton.style.boxShadow = '0 5px 15px rgba(0, 255, 0, 0.3)';
+                    };
+                    nextButton.onmouseout = () => {
+                        nextButton.style.background = 'rgba(0, 255, 0, 0.1)';
+                        nextButton.style.color = 'var(--primary-color)';
+                        nextButton.style.transform = 'translateY(0)';
+                        nextButton.style.boxShadow = 'none';
+                    };
+                    nextButton.onclick = () => {
+                        console.log('Loading next page:', _0xv1w2 + 1);
+                        loadCategory(_0xt9u0, _0xv1w2 + 1);
+                    };
+                    _0xs3t4.appendChild(nextButton);
+                }
+
+                homeElement.appendChild(_0xs3t4);
+                lazyLoadImages();
+                
+            } catch (error) {
+                console.error('Failed to load category:', error);
+                homeElement.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load content. Please try again.</p>
+                        <button class="back-btn" onclick="loadCategory('home', 1, true)">Back to Home</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Enhanced search function
+        async function searchMovies(_0xu5v6) {
+            try {
+                homeElement.style.display = 'block';
+                detailsElement.style.display = 'none';
+                homeElement.innerHTML = '<div class="loading">Searching... Please wait...</div>';
+
+                const _0xy9z0 = `${_0x2e1b}/?s=${encodeURIComponent(_0xu5v6)}`;
+                const _0xa1b2 = await _0x7f8d(_0xy9z0);
+                const _0xc3d4 = Array.from(_0xa1b2.querySelectorAll('.post-inner')).map(_0xe5f6 => {
+                    const _0xg7h8 = _0xe5f6.querySelector('h2 > a')?.textContent?.replace('Download ', '') || 'Untitled';
+                    const _0xi9j0 = _0xe5f6.querySelector('a')?.href;
+                    const _0xk1l2 = _0xe5f6.querySelector('img')?.getAttribute('data-src') || 
+                                  _0xe5f6.querySelector('img')?.getAttribute('src') || 
+                                  _0xe5f6.querySelector('img')?.getAttribute('data-lazy-src');
+                    return {
+                        title: _0xg7h8,
+                        href: _0xi9j0,
+                        posterUrl: _0xk1l2 || 'https://via.placeholder.com/200x300?text=No+Image'
+                    };
+                }).filter(item => item.href && item.title);
+
+                homeElement.innerHTML = '';
+                
+                if (_0xc3d4.length === 0) {
+                    homeElement.innerHTML = `
+                        <div class="no-results">
+                            <p>No movies found for "${_0xu5v6}". Try a different search term.</p>
+                            <button class="back-btn" onclick="loadCategory('home', 1)">Back to Home</button>
+                        </div>`;
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+                _0xc3d4.forEach(_0xm3n4 => {
+                    const _0xo5p6 = document.createElement('div');
+                    _0xo5p6.className = 'movie-card';
+                    _0xo5p6.innerHTML = `
+                        <img src="${_0xm3n4.posterUrl}" 
+                             alt="${_0xm3n4.title}"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/200x300?text=No+Image'"
+                             onload="this.classList.add('loaded')"
+                             class="movie-poster">
+                        <h3>${_0xm3n4.title}</h3>
+                    `;
+                    if (_0xm3n4.href) {
+                        _0xo5p6.onclick = () => loadDetails(_0xm3n4.href);
+                    }
+                    fragment.appendChild(_0xo5p6);
+                });
+
+                homeElement.appendChild(fragment);
+
+                const backButton = document.createElement('button');
+                backButton.className = 'back-btn';
+                backButton.textContent = 'Back to Home';
+                backButton.onclick = () => loadCategory('home', 1);
+                homeElement.appendChild(backButton);
+
+                lazyLoadImages();
+                
+            } catch (error) {
+                console.error('Search failed:', error);
+                homeElement.innerHTML = `
+                    <div class="error-message">
+                        <p>Search failed. Please try again.</p>
+                        <button class="back-btn" onclick="loadCategory('home', 1)">Back to Home</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Enhanced loadDetails function
+        async function loadDetails(_0xw3x4) {
+            try {
+                document.getElementById('details').innerHTML = '<div class="loading">Loading... Please wait...</div>';
+                const _0xy5z6 = await _0x7f8d(_0xw3x4);
+                
+                // Extract metadata
+                const _0xa7b8 = _0xy5z6.querySelector('meta[property="og:title"]')?.content?.replace('Download ', '') || 'Untitled';
+                const _0xc9d0 = _0xy5z6.querySelector('meta[property="og:image"]')?.content;
+                const _0xe1f2 = _0xy5z6.querySelector('.entry-content, .entry-inner');
+                
+                if (!_0xe1f2) {
+                    throw new Error('Content not found');
+                }
+
+                // Extract synopsis and rating
+                const _0xg3h4 = Array.from(_0xe1f2.querySelectorAll('h3') || [])
+                    .find(_0xi5j6 => /synopsis|plot/i.test(_0xi5j6.textContent))
+                    ?.nextElementSibling?.textContent || 'No plot available.';
+                
+                const _0xk7l8 = Array.from(_0xe1f2.querySelectorAll('a') || [])
+                    .find(_0xm9n0 => /rating/i.test(_0xm9n0.textContent))?.href;
+
+                // Determine if it's a series
+                const _0xo1p2 = _0xe1f2.querySelector('h3');
+                const _0xq3r4 = _0xo1p2?.nextElementSibling?.nextElementSibling?.textContent?.includes('Series Name') ||
+                               _0xo1p2?.nextElementSibling?.nextElementSibling?.textContent?.includes('SHOW Name');
+
+                const _0xs5t6 = document.getElementById('home');
+                const _0xu7v8 = document.getElementById('details');
+                _0xs5t6.style.display = 'none';
+                _0xu7v8.style.display = 'block';
+
+                if (_0xq3r4) {
+                    // Handle TV Series
+                    const _0xw9x0 = Array.from(_0xe1f2.querySelectorAll('h3, h4, h5, p strong, .episode-title') || [])
+                        .filter(_0xy1z2 => {
+                            const _0xt1u2 = _0xy1z2.textContent.toLowerCase();
+                            return (_0xt1u2.includes('4k') || 
+                                   _0xt1u2.includes('1080p') || 
+                                   _0xt1u2.includes('720p') || 
+                                   _0xt1u2.includes('480p') || 
+                                   _0xt1u2.includes('episode') ||
+                                   /season|s\d+|complete/i.test(_0xt1u2)) && 
+                                   !/zip|rar|index/i.test(_0xt1u2);
+                        });
+
+                    console.log('Found episode headers:', _0xw9x0.length);
+
+                    const _0xa3b4 = [];
+                    for (const _0xc5d6 of _0xw9x0) {
+                        const _0xe7f8 = /(?:season |s)(\d+)|(?:complete series)/i.exec(_0xc5d6.textContent);
+                        const _0xg9h0 = _0xe7f8 ? (_0xe7f8[1] ? parseInt(_0xe7f8[1]) : 1) : 1;
+                        
+                        // Look for links in the next few siblings
+                        let currentElement = _0xc5d6;
+                        let searchDepth = 0;
+                        const maxDepth = 5;
+                        
+                        while (currentElement && searchDepth < maxDepth) {
+                            const _0xi1j2 = Array.from(
+                                currentElement.querySelectorAll('a') || []
+                            ).filter(a => {
+                                const text = a.textContent.toLowerCase();
+                                return text.includes('download') || 
+                                       text.includes('watch') || 
+                                       text.includes('v-cloud') || 
+                                       text.includes('g-direct') ||
+                                       text.includes('episode');
+                            });
+                            
+                            if (_0xi1j2.length > 0) {
+                                for (const link of _0xi1j2) {
+                                    try {
+                                        const _0xq9r0 = await _0x7f8d(link.href);
+                                        const _0xs1t2 = Array.from(_0xq9r0.querySelectorAll('a'))
+                                            .filter(a => {
+                                                const text = a.textContent.toLowerCase();
+                                                return text.includes('v-cloud') || 
+                                                       text.includes('g-direct') ||
+                                                       text.includes('download now') ||
+                                                       text.includes('direct download');
+                                            })
+                                            .map(a => a.href);
+                                        
+                                        _0xs1t2.forEach((_0xy7z8, _0xa9b0) => {
+                                            const episodeMatch = link.textContent.match(/episode[^\d]*(\d+)/i);
+                                            const episodeNum = episodeMatch ? parseInt(episodeMatch[1]) : _0xa9b0 + 1;
+                                            
+                                            _0xa3b4.push({
+                                                season: _0xg9h0,
+                                                episode: episodeNum,
+                                                link: _0xy7z8,
+                                                quality: _0xc5d6.textContent.match(/\d{3,4}p|4k/i)?.[0] || 'HD'
+                                            });
+                                        });
+                                    } catch (error) {
+                                        console.warn('Failed to fetch episode links:', error);
+                                    }
+                                }
+                                break;
+                            }
+                            
+                            currentElement = currentElement.nextElementSibling;
+                            searchDepth++;
+                        }
+                    }
+
+                    console.log('Found episode links:', _0xa3b4.length);
+
+                    // Sort episodes by season and episode number
+                    _0xa3b4.sort((a, b) => {
+                        if (a.season !== b.season) return a.season - b.season;
+                        return a.episode - b.episode;
+                    });
+
+                    _0xu7v8.innerHTML = `
+                        <h2>${_0xa7b8} (Series)</h2>
+                        <img src="${_0xc9d0 || 'https://via.placeholder.com/300'}" 
+                             alt="${_0xa7b8}" 
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=No+Image'"
+                             class="details-poster">
+                        <p>${_0xg3h4}</p>
+                        <p>IMDb: ${_0xk7l8 ? `<a href="${_0xk7l8}" target="_blank">Check Rating</a>` : 'N/A'}</p>
+                        ${_0xa3b4.length > 0 ? `
+                            <h3>Episodes:</h3>
+                            <ul>${_0xa3b4.map(_0xc1d2 => 
+                                `<li>
+                                    <span>Season ${_0xc1d2.season} Episode ${_0xc1d2.episode} (${_0xc1d2.quality})</span>
+                                    <a href="${_0xc1d2.link}" target="_blank" rel="noopener noreferrer">Download</a>
+                                 </li>`).join('')}
+                            </ul>
+                        ` : '<p class="no-links">No episode links available at the moment. Please try again later.</p>'}
+                        <button class="back-btn" onclick="loadCategory('${_0x3f4c}', ${_0x5d6e})">Back</button>
+                `;
+            } else {
+                    // Handle Movies
+                    const _0xe3f4 = Array.from(_0xe1f2.querySelectorAll('p > a, .entry-content a, .dlinks a, button.download-btn, a.download-link, a[href*="download"], a:has(button)') || [])
+                        .filter(_0xa1b2 => {
+                            const text = _0xa1b2.textContent.toLowerCase();
+                            return text.includes('download') || 
+                                   text.includes('watch') || 
+                                   text.includes('v-cloud') || 
+                                   text.includes('g-direct') ||
+                                   text.includes('1080p') ||
+                                   text.includes('720p') ||
+                                   text.includes('480p');
+                        });
+
+                    console.log('Found download links:', _0xe3f4.length);
+                    
+                    const _0xg5h6 = await Promise.all(_0xe3f4.map(async _0xi7j8 => {
+                        try {
+                            const _0xk9l0 = await _0x7f8d(_0xi7j8.href);
+                            const possibleLinks = Array.from(_0xk9l0.querySelectorAll('a'))
+                                .filter(a => {
+                                    const text = a.textContent.toLowerCase();
+                                    return text.includes('v-cloud') || 
+                                           text.includes('g-direct') ||
+                                           text.includes('download now') ||
+                                           text.includes('direct download');
+                                })
+                                .map(a => a.href);
+                            
+                            return possibleLinks.length > 0 ? possibleLinks[0] : null;
+                        } catch (error) {
+                            console.warn('Failed to fetch download link:', error);
+                            return null;
+                        }
+                    }));
+
+                    const validLinks = _0xg5h6.filter(link => link !== null);
+                    console.log('Valid download links found:', validLinks.length);
+
+                    _0xu7v8.innerHTML = `
+                        <h2>${_0xa7b8} (Movie)</h2>
+                        <img src="${_0xc9d0 || 'https://via.placeholder.com/300'}" 
+                             alt="${_0xa7b8}" 
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=No+Image'"
+                             class="details-poster">
+                        <p>${_0xg3h4}</p>
+                        <p>IMDb: ${_0xk7l8 ? `<a href="${_0xk7l8}" target="_blank">Check Rating</a>` : 'N/A'}</p>
+                        ${validLinks.length > 0 ? `
+                            <h3>Download Links:</h3>
+                            <ul>${validLinks.map((link, index) => 
+                                `<li>
+                                    <span>Download Link ${index + 1}</span>
+                                    <a href="${link}" target="_blank" rel="noopener noreferrer">Download</a>
+                                 </li>`).join('')}
+                            </ul>
+                        ` : '<p class="no-links">No download links available at the moment. Please try again later.</p>'}
+                        <button class="back-btn" onclick="loadCategory('${_0x3f4c}', ${_0x5d6e})">Back</button>
+                    `;
+                }
+            } catch (error) {
+                console.error('Failed to load details:', error);
+                document.getElementById('details').innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load movie details. Please try again.</p>
+                        <button class="back-btn" onclick="loadCategory('${_0x3f4c}', ${_0x5d6e})">Back to Home</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('keypress', event => {
+            if (event.key === 'Enter') {
+                const searchTerm = event.target.value.trim();
+                if (searchTerm === '') {
+                    loadCategory('home', 1);
+                } else {
+                    homeElement.innerHTML = '<div class="loading">Searching... Please wait...</div>';
+                    searchMovies(searchTerm);
+                }
+            }
+        });
+
+        // Add input event listener for real-time search feedback
+        searchInput.addEventListener('input', event => {
+            const searchInput = event.target;
+            if (searchInput.value.trim() === '') {
+                searchInput.classList.remove('active');
+            } else {
+                searchInput.classList.add('active');
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategory('home', 1);
+            
+            // Add lazy loading to images
+            if ('loading' in HTMLImageElement.prototype) {
+                const images = document.querySelectorAll('img[data-src]');
+                images.forEach(img => {
+                    img.setAttribute('loading', 'lazy');
+                });
+            }
+
+            // Add touch feedback for mobile
+            document.querySelectorAll('.movie-card, button').forEach(element => {
+                element.addEventListener('touchstart', () => {
+                    element.style.transform = 'scale(0.98)';
+                }, { passive: true });
+
+                element.addEventListener('touchend', () => {
+                    element.style.transform = '';
+                }, { passive: true });
+            });
+
+            // Initialize header scroll behavior
+            const header = document.querySelector('header');
+            let lastScrollY = window.scrollY;
+            const scrollThreshold = 50;
+
+            function handleScroll() {
+                const currentScrollY = window.scrollY;
+                
+                // Only show header when at the very top
+                if (currentScrollY <= 0) {
+                    header.classList.remove('header-hidden');
+                } else {
+                    header.classList.add('header-hidden');
+                }
+
+                lastScrollY = currentScrollY;
+            }
+
+            // Debounced scroll handler using requestAnimationFrame for better performance
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (!scrollTimeout) {
+                    scrollTimeout = window.requestAnimationFrame(() => {
+                        handleScroll();
+                        scrollTimeout = null;
+                    });
+                }
+            }, { passive: true });
+
+            // Ensure header is visible when page loads at top
+            if (window.scrollY === 0) {
+                header.classList.remove('header-hidden');
+            }
+
+            // Add this JavaScript to handle active state
+            const navButtons = document.querySelectorAll('nav button');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                });
+            });
+            
+            // Set home button as active by default
+            document.querySelector('nav button:first-child').classList.add('active');
+        });
+
+        // Add scroll to top functionality
+        const scrollButton = document.createElement('button');
+        scrollButton.className = 'scroll-top';
+        scrollButton.innerHTML = '↑';
+        document.body.appendChild(scrollButton);
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollButton.classList.add('visible');
+            } else {
+                scrollButton.classList.remove('visible');
+            }
+        });
+
+        scrollButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Optimize scroll performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    scrollTimeout = null;
+                    // Perform scroll-based operations here
+                }, 100);
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
